@@ -17,7 +17,7 @@ $container['db'] = function ($c) {
     return $capsule;
 };
 
-$container['phpmig.adapter'] = function ($c) {
+$container['phpmig.adapter'] = function($c) {
     return new Adapter\Illuminate\Database($c['db'], 'migrations');
 };
 $container['phpmig.migrations_path'] = __DIR__ . DIRECTORY_SEPARATOR . 'migrations';

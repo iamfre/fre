@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Factories\MainHandlerFactory;
+use App\Handlers\MainHandler;
+
 /**
  * The configuration provider for the App module
  *
@@ -32,10 +35,9 @@ class ConfigProvider
     {
         return [
             'invokables' => [
-                Handler\PingHandler::class => Handler\PingHandler::class,
             ],
             'factories'  => [
-                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
+                MainHandler::class => MainHandlerFactory::class,
             ],
         ];
     }
