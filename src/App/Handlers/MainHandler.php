@@ -36,9 +36,11 @@ class MainHandler implements RequestHandlerInterface
             $trees[] = $garden->makeTree(new Pear());
         }
 
+        $wasCreated = json_encode($trees);
+
         $harvester = new MachineHarvester();
         $harvester->harvest($trees);
 
-        return new JsonResponse($trees);
+        return new JsonResponse(json_decode($wasCreated));
     }
 }

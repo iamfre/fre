@@ -5,9 +5,6 @@ namespace App\src\Harvester;
 use App\Helpers\DataBaseConnect;
 use App\src\Garden;
 use App\src\Models\Fruit;
-use App\src\Models\Tree;
-use App\src\Tree\Apple;
-use App\src\Tree\Pear;
 use Exception;
 use Ramsey\Uuid\Uuid;
 
@@ -39,7 +36,6 @@ class MachineHarvester extends BaseHarvester
         $totalCurrentWeight = 0;
 
         foreach ($data as $tree) {
-            echo "Старт сбора с $tree->type всего $tree->quantity_fruits" . '<br>';
             for ($i = 0; $i < $tree->quantity_fruits; $i++) {
                 switch ($tree->type) {
                     case 'apple':
@@ -59,53 +55,39 @@ class MachineHarvester extends BaseHarvester
                 }
 
                 if (($totalCurrentWeight + $fruits_weight > self::CAPACITY - $this->getCurrentCapacity())) {
-                    echo "Предел веса $totalCurrentWeight" . '<br>';
-
-                    foreach ($fruits as $key => $value) {
-
-                        $container = Fruit::whereType($key)->first();
-
-                        if (!isset($container)) {
-                            Fruit::create(
-                                [
-                                    'type' => $key,
-                                    'quantity' => $value['quantity'],
-                                    'weight' => $value['weight'],
-                                ]
-                            );
-                        } else {
-                            $container->quantity += $value['quantity'];
-                            $container->weight += $value['weight'];
-                            $container->save();
-                        }
-
-                        echo "Отгружено $key в кол-ве " . $value['quantity'] . " общим весом " . $value['weight'] . '<br>';
-                        $fruits[$key]['weight'] -= $value['weight'];
-                        $fruits[$key]['quantity'] -= $value['quantity'];
-                        $totalCurrentWeight -= $value['weight'];
-                    }
+                    $fruits = $this->razgrus($fruits,$totalCurrentWeight);
                 }
 
                 $totalCurrentWeight += $fruits_weight;
                 $fruits[$tree->type]['weight'] += $fruits_weight;
                 $fruits[$tree->type]['quantity']++;
                 if ($tree->quantity_fruits == $i + 1) {
-                    echo "С дерева $tree->type собраны все фрукты " . ($i + 1) . '<br>';
                     $tree->quantity_fruits -= ($i + 1);
                     $tree->save();
-                    echo "На дереве $tree->type осталось $tree->quantity_fruits фруктов" . '<br>';
                 }
             }
 
         }
 
-        echo "Последняя разгрузка $totalCurrentWeight" . '<br>';
+        $this->razgrus($fruits, $totalCurrentWeight, true);
+    }
 
+
+    /**
+     * @param $fruits
+     * @param $totalCurrentWeight
+     * @param bool $isLast
+     * @return array|void
+     */
+    public function razgrus($fruits, &$totalCurrentWeight, bool $isLast = false)
+    {
         foreach ($fruits as $key => $value) {
+            if ($value['quantity'] == 0) {
+                continue;
+            }
+            $container = Fruit::whereType($key)->first();
 
-            $sklad = Fruit::whereType($key)->first();
-
-            if (!isset($sklad)) {
+            if (!isset($container)) {
                 Fruit::create(
                     [
                         'type' => $key,
@@ -114,18 +96,15 @@ class MachineHarvester extends BaseHarvester
                     ]
                 );
             } else {
-                $sklad->quantity += $value['quantity'];
-                $sklad->weight += $value['weight'];
-                $sklad->save();
+                $container->quantity += $value['quantity'];
+                $container->weight += $value['weight'];
+                $container->save();
             }
 
-            echo "Отгружено $key в кол-ве " . $value['quantity'] . " общим весом " . $value['weight'] . '<br>';
             $fruits[$key]['weight'] -= $value['weight'];
             $fruits[$key]['quantity'] -= $value['quantity'];
             $totalCurrentWeight -= $value['weight'];
         }
-//        TODO: iamfree
-        var_export($fruits);
-        die();
+        return $fruits;
     }
 }
