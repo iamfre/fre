@@ -5,20 +5,23 @@ declare(strict_types=1);
 namespace App\Handlers;
 
 use App\src\Garden;
+use App\src\Harvester\MachineHarvester;
 use App\src\Tree\Apple;
 use App\src\Tree\Pear;
+use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class MainHandler implements RequestHandlerInterface
 {
-    private const APPLE_QUANTITY = 10;
-    private const PEAR_QUANTITY = 15;
+    private const APPLE_QUANTITY = 2;
+    private const PEAR_QUANTITY = 2;
 
     /**
      * @param ServerRequestInterface $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): JsonResponse
     {
@@ -32,6 +35,9 @@ class MainHandler implements RequestHandlerInterface
         for ($i = 0; $i < self::PEAR_QUANTITY; $i++) {
             $trees[] = $garden->makeTree(new Pear());
         }
+
+        $harvester = new MachineHarvester();
+        $harvester->harvest($trees);
 
         return new JsonResponse($trees);
     }

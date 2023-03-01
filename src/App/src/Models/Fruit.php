@@ -10,6 +10,7 @@ class Fruit extends Model
 
     protected $fillable = [
         'type',
+        'quantity',
         'weight',
     ];
 }

@@ -14,6 +14,7 @@ class CreateFruitsTable extends Migration
         Capsule::schema()->create('fruits', function (Blueprint $table) {
             $table->id();
             $table->string('type');
+            $table->unsignedBigInteger('quantity')->default(0);
             $table->unsignedBigInteger('weight')->default(0);
             $table->timestamps();
         });
