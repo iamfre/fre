@@ -4,15 +4,22 @@ namespace App\src\Tree;
 
 abstract class BaseTree
 {
+    const STATUSES = [
+        0 => 'growing',
+        1 => 'ripe',
+        2 => 'harvesting',
+    ];
     private string $type;
-    private int $quantity_fruits;
+    private string $quantity_fruits;
     private string $uuid;
+    private string $status;
 
-    public function __construct($type, $quantity_fruits, $uuid)
+    public function __construct($type, $quantity_fruits, $uuid, $status = self::STATUSES[0])
     {
         $this->setType($type);
         $this->setQuantityFruits($quantity_fruits);
         $this->setUuid($uuid);
+        $this->setStatus($status);
     }
 
     /**
@@ -61,5 +68,21 @@ abstract class BaseTree
     public function setUuid(string $uuid): void
     {
         $this->uuid = $uuid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 }
