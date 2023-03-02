@@ -10,15 +10,19 @@ abstract class BaseTree
         2 => 'harvesting',
     ];
     private string $type;
-    private string $quantity_fruits;
+    private array $fruits;
+    private int $fruitsQuantity;
     private string $uuid;
     private string $status;
 
-    public function __construct($type, $quantity_fruits, $uuid, $status = self::STATUSES[0])
+    private array $fruitWeight;
+
+    public function __construct($type, $fruitsQuantity, $uuid, $fruitWeight, $status = self::STATUSES[0])
     {
         $this->setType($type);
-        $this->setQuantityFruits($quantity_fruits);
+        $this->setFruitsQuantity($fruitsQuantity);
         $this->setUuid($uuid);
+        $this->setFruitWeight($fruitWeight);
         $this->setStatus($status);
     }
 
@@ -28,22 +32,6 @@ abstract class BaseTree
     public function getType(): string
     {
         return $this->type;
-    }
-
-    /**
-     * @return int
-     */
-    public function getQuantityFruits(): int
-    {
-        return $this->quantity_fruits;
-    }
-
-    /**
-     * @param int $quantity_fruits
-     */
-    public function setQuantityFruits(int $quantity_fruits): void
-    {
-        $this->quantity_fruits = $quantity_fruits;
     }
 
     /**
@@ -84,5 +72,53 @@ abstract class BaseTree
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFruits(): array
+    {
+        return $this->fruits;
+    }
+
+    /**
+     * @param array $fruits
+     */
+    public function setFruits(array $fruits): void
+    {
+        $this->fruits = $fruits;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFruitsQuantity(): int
+    {
+        return $this->fruitsQuantity;
+    }
+
+    /**
+     * @param int $fruitsQuantity
+     */
+    public function setFruitsQuantity(int $fruitsQuantity): void
+    {
+        $this->fruitsQuantity = $fruitsQuantity;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFruitWeight(): array
+    {
+        return $this->fruitWeight;
+    }
+
+    /**
+     * @param array $fruitWeight
+     */
+    public function setFruitWeight(array $fruitWeight): void
+    {
+        $this->fruitWeight = $fruitWeight;
     }
 }

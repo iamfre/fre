@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Handlers;
 
-use App\src\Garden;
-use App\src\Harvester\MachineHarvester;
+use App\Helpers\DataBaseConnect;
 use App\src\Tree\Apple;
-use App\src\Tree\Pear;
+use App\src\Tree\TreeFactory;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,9 +14,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class MainHandler implements RequestHandlerInterface
 {
-    private const APPLE_QUANTITY = 2;
-    private const PEAR_QUANTITY = 2;
-
     /**
      * @param ServerRequestInterface $request
      * @return JsonResponse
@@ -25,22 +21,20 @@ class MainHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): JsonResponse
     {
-        $garden = new Garden();
-        $trees = [];
+        $treeFactory = new TreeFactory();
+        (new DataBaseConnect())->getConfigOrm();
 
-        for ($i = 0; $i < self::APPLE_QUANTITY; $i++) {
-            $trees[] = $garden->makeTree(new Apple());
-        }
+        $treeFactory->createOne(new Apple());
 
-        for ($i = 0; $i < self::PEAR_QUANTITY; $i++) {
-            $trees[] = $garden->makeTree(new Pear());
-        }
+        $treeFactory->createSeveral([
+            'apple' => 10,
+            'pear' => 15,
+        ]);
 
-        $wasCreated = json_encode($trees);
-
-        $harvester = new MachineHarvester();
-        $harvester->harvest($trees);
-
-        return new JsonResponse(json_decode($wasCreated));
+        return new JsonResponse(
+            [
+                'status' => 'ok'
+            ]
+        );
     }
 }

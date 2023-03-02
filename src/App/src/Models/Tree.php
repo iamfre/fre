@@ -10,7 +10,9 @@ class Tree extends Model
     
     protected $fillable = [
         'type',
-        'quantity_fruits',
+        'fruits',
+        'fruit_quantity',
         'uuid',
+        'status',
     ];
 }

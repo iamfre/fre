@@ -14,8 +14,10 @@ class CreateTreesTable extends Migration
         Capsule::schema()->create('trees', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->unsignedInteger('quantity_fruits');
+            $table->string('status');
+            $table->unsignedInteger('fruit_quantity');
             $table->uuid('uuid')->unique();
+            $table->json('fruits');
             $table->timestamps();
         });
     }

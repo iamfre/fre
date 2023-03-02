@@ -6,7 +6,8 @@ use Ramsey\Uuid\Uuid;
 
 class Apple extends BaseTree
 {
-    const LIMIT_QUANTITY = ['min' => 40, 'max' => 50];
+    public const FRUIT_QUANTITY = ['min' => 40, 'max' => 50];
+    public const FRUIT_WEIGHT = ['min' => 150, 'max' => 180];
 
     const TREE_TYPE = 'apple';
 
@@ -14,8 +15,9 @@ class Apple extends BaseTree
     {
         parent::__construct(
             self::TREE_TYPE,
-            rand(self::LIMIT_QUANTITY['min'], self::LIMIT_QUANTITY['max']),
-            Uuid::uuid4()
+            rand(self::FRUIT_QUANTITY['min'], self::FRUIT_QUANTITY['max']),
+            Uuid::uuid4(),
+            self::FRUIT_WEIGHT,
         );
     }
 }
