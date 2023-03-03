@@ -25,6 +25,7 @@ class MainHandler implements RequestHandlerInterface
     {
         (new DataBaseConnect())->getConfigOrm();
 
+        // farm
         $treeFactory = new TreeFactory();
         $exampleOneTree = $treeFactory->createOne(new Apple());
         $exampleSeveralTrees = $treeFactory->createSeveral([
@@ -38,7 +39,9 @@ class MainHandler implements RequestHandlerInterface
 
         return new JsonResponse(
             [
-                'status' => 'ok'
+                'сборщик' => $harvester,
+                'одно дерево' => $exampleOneTree,
+                'несколько деревьев' => $exampleSeveralTrees,
             ]
         );
     }

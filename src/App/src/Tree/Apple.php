@@ -9,7 +9,7 @@ class Apple extends BaseTree
     public const FRUIT_QUANTITY = ['min' => 40, 'max' => 50];
     public const FRUIT_WEIGHT = ['min' => 150, 'max' => 180];
 
-    const TREE_TYPE = 'apple';
+    public const TREE_TYPE = 'apple';
 
     public function __construct()
     {

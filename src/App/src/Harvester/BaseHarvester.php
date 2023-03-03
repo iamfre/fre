@@ -5,18 +5,18 @@ use App\src\Interfaces\Harvest;
 
 abstract class BaseHarvester implements Harvest
 {
-    const STATUS = [
+    public const STATUS = [
         0 => 'busy',
         1 => 'free',
     ];
 
-    private string $type;
-    private int $capacity;
-    private int $current_capacity;
+    public string $type;
+    public int $capacity;
+    public int $current_capacity;
 
-    private string $uuid;
+    public string $uuid;
 
-    private string $status;
+    public string $status;
 
 
     public function __construct($type, $capacity, $uuid, $current_capacity, $status = self::STATUS[1])

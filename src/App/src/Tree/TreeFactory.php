@@ -7,7 +7,7 @@ use Exception;
 
 class TreeFactory
 {
-    const AVAILABLE_TREE_TYPES = [
+    public const AVAILABLE_TREE_TYPES = [
         0 => 'apple',
         1 => 'pear',
     ];

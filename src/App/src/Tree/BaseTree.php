@@ -9,11 +9,14 @@ abstract class BaseTree
         1 => 'ripe',
         2 => 'harvesting',
     ];
-    private string $type;
-    private array $fruits;
-    private int $fruitsQuantity;
-    private string $uuid;
-    private string $status;
+
+    public const FRUIT_WEIGHT = ['min' => 10, 'max' => 20];
+
+    public string $type;
+    public array $fruits;
+    public int $fruitsQuantity;
+    public string $uuid;
+    public string $status;
 
     private array $fruitWeight;
 

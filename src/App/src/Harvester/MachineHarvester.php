@@ -10,10 +10,10 @@ use Ramsey\Uuid\Uuid;
 
 class MachineHarvester extends BaseHarvester
 {
-    const CAPACITY = 15000;
-    const CURRENT_CAPACITY = 0;
+    public const CAPACITY = 15000;
+    public const CURRENT_CAPACITY = 0;
 
-    const HARVESTER_TYPE = 'machine';
+    public const HARVESTER_TYPE = 'machine';
 
     public function __construct()
     {
