@@ -3,6 +3,7 @@
 namespace App\src\Tree;
 
 use App\src\Models\Tree;
+use Exception;
 
 class TreeFactory
 {
@@ -15,9 +16,9 @@ class TreeFactory
      * Создает один экземпляр дерева
      *
      * @param BaseTree $tree
-     * @return void
+     * @return BaseTree
      */
-    public function createOne(BaseTree $tree): void
+    public function createOne(BaseTree $tree): BaseTree
     {
         $fruits = [];
 
@@ -39,6 +40,8 @@ class TreeFactory
                 'status' => $tree->getStatus(),
             ]
         );
+
+        return $tree;
     }
 
     /**
@@ -46,24 +49,29 @@ class TreeFactory
      * param example ['apple' => 2, 'pear' => 3]
      *
      * @param array $data
-     * @return void
+     * @return array
+     * @throws Exception
      */
-    public function createSeveral(array $data): void
+    public function createSeveral(array $data): array
     {
-        foreach ($data as $key => $value) {
+        $trees = [];
 
+        foreach ($data as $key => $value) {
             switch ($key) {
                 case self::AVAILABLE_TREE_TYPES[0]:
                     for ($i = 0; $i < $value; $i++) {
-                        $this->createOne(new Apple());
+                        $trees[] = $this->createOne(new Apple());
                     }
                     break;
                 case self::AVAILABLE_TREE_TYPES[1]:
                     for ($i = 0; $i < $value; $i++) {
-                        $this->createOne(new Pear());
+                        $trees[] = $this->createOne(new Pear());
                     }
                     break;
+                default:
+                    throw new Exception('Тип дерева не поддерживается');
             }
         }
+        return $trees;
     }
 }

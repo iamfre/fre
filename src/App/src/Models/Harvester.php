@@ -9,8 +9,9 @@ class Harvester extends Model
     protected $table = 'harvesters';
 
     protected $fillable = [
-        'uuid',
+        'type',
+        'status',
         'capacity',
-        'at_work',
+        'uuid',
     ];
 }

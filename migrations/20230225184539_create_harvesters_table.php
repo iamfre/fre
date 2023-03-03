@@ -13,9 +13,10 @@ class CreateHarvestersTable extends Migration
     {
         Capsule::schema()->create('harvesters', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
             $table->uuid('uuid')->unique();
-            $table->string('capacity')->default(10000);
-            $table->boolean('at_work')->default(false);
+            $table->unsignedBigInteger('capacity')->default(10000);
+            $table->string('status');
             $table->timestamps();
         });
     }

@@ -55,7 +55,7 @@ class MachineHarvester extends BaseHarvester
                 }
 
                 if (($totalCurrentWeight + $fruits_weight > self::CAPACITY - $this->getCurrentCapacity())) {
-                    $fruits = $this->razgrus($fruits,$totalCurrentWeight);
+                    $fruits = $this->unload($fruits,$totalCurrentWeight);
                 }
 
                 $totalCurrentWeight += $fruits_weight;
@@ -69,7 +69,7 @@ class MachineHarvester extends BaseHarvester
 
         }
 
-        $this->razgrus($fruits, $totalCurrentWeight, true);
+        $this->unload($fruits, $totalCurrentWeight, true);
     }
 
 
@@ -79,7 +79,7 @@ class MachineHarvester extends BaseHarvester
      * @param bool $isLast
      * @return array|void
      */
-    public function razgrus($fruits, &$totalCurrentWeight, bool $isLast = false)
+    public function unload($fruits, &$totalCurrentWeight, bool $isLast = false)
     {
         foreach ($fruits as $key => $value) {
             if ($value['quantity'] == 0) {

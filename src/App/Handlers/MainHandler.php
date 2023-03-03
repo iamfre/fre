@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Handlers;
 
 use App\Helpers\DataBaseConnect;
+use App\src\Harvester\HarvesterFactory;
+use App\src\Harvester\MachineHarvester;
 use App\src\Tree\Apple;
 use App\src\Tree\TreeFactory;
 use Exception;
@@ -21,15 +23,18 @@ class MainHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): JsonResponse
     {
-        $treeFactory = new TreeFactory();
         (new DataBaseConnect())->getConfigOrm();
 
-        $treeFactory->createOne(new Apple());
-
-        $treeFactory->createSeveral([
-            'apple' => 10,
-            'pear' => 15,
+        $treeFactory = new TreeFactory();
+        $exampleOneTree = $treeFactory->createOne(new Apple());
+        $exampleSeveralTrees = $treeFactory->createSeveral([
+            'apple' => 2,
+            'pear' => 2,
         ]);
+
+        // harvest
+        $harvesterFactory = new HarvesterFactory();
+        $harvester = $harvesterFactory->create(new MachineHarvester());
 
         return new JsonResponse(
             [

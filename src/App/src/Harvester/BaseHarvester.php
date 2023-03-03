@@ -5,19 +5,27 @@ use App\src\Interfaces\Harvest;
 
 abstract class BaseHarvester implements Harvest
 {
+    const STATUS = [
+        0 => 'busy',
+        1 => 'free',
+    ];
+
     private string $type;
     private int $capacity;
     private int $current_capacity;
 
     private string $uuid;
 
+    private string $status;
 
-    public function __construct($type, $capacity, $uuid, $current_capacity)
+
+    public function __construct($type, $capacity, $uuid, $current_capacity, $status = self::STATUS[1])
     {
         $this->setType($type);
         $this->setCapacity($capacity);
         $this->setUuid($uuid);
         $this->setCurrentCapacity($current_capacity);
+        $this->setStatus($status);
     }
 
     /**
@@ -82,5 +90,21 @@ abstract class BaseHarvester implements Harvest
     public function setCurrentCapacity(int $current_capacity): void
     {
         $this->current_capacity = $current_capacity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 }
