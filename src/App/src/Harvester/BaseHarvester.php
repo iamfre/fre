@@ -1,10 +1,13 @@
 <?php
 
 namespace App\src\Harvester;
+
 use App\src\Interfaces\Harvest;
 
 abstract class BaseHarvester implements Harvest
 {
+    public const FRUITS = [];
+
     public const STATUS = [
         0 => 'busy',
         1 => 'free',
@@ -12,20 +15,20 @@ abstract class BaseHarvester implements Harvest
 
     public string $type;
     public int $capacity;
-    public int $current_capacity;
-
+    public int $currentCapacity;
     public string $uuid;
-
     public string $status;
+    public array $fruits;
 
-
-    public function __construct($type, $capacity, $uuid, $current_capacity, $status = self::STATUS[1])
+    public function __construct($type, $capacity, $uuid, $currentCapacity, $status = self::STATUS[1],
+                                $fruits = self::FRUITS)
     {
         $this->setType($type);
         $this->setCapacity($capacity);
         $this->setUuid($uuid);
-        $this->setCurrentCapacity($current_capacity);
+        $this->setCurrentCapacity($currentCapacity);
         $this->setStatus($status);
+        $this->setFruits($fruits);
     }
 
     /**
@@ -81,15 +84,15 @@ abstract class BaseHarvester implements Harvest
      */
     public function getCurrentCapacity(): int
     {
-        return $this->current_capacity;
+        return $this->currentCapacity;
     }
 
     /**
-     * @param int $current_capacity
+     * @param int $currentCapacity
      */
-    public function setCurrentCapacity(int $current_capacity): void
+    public function setCurrentCapacity(int $currentCapacity): void
     {
-        $this->current_capacity = $current_capacity;
+        $this->currentCapacity = $currentCapacity;
     }
 
     /**
@@ -106,5 +109,21 @@ abstract class BaseHarvester implements Harvest
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFruits(): array
+    {
+        return $this->fruits;
+    }
+
+    /**
+     * @param array $fruits
+     */
+    public function setFruits(array $fruits): void
+    {
+        $this->fruits = $fruits;
     }
 }

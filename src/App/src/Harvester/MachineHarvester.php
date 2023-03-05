@@ -5,12 +5,13 @@ namespace App\src\Harvester;
 use App\Helpers\DataBaseConnect;
 use App\src\Garden;
 use App\src\Models\Fruit;
+use App\src\Tree\BaseTree;
 use Exception;
 use Ramsey\Uuid\Uuid;
 
 class MachineHarvester extends BaseHarvester
 {
-    public const CAPACITY = 15000;
+    public const CAPACITY = 5000;
     public const CURRENT_CAPACITY = 0;
 
     public const HARVESTER_TYPE = 'machine';
@@ -28,60 +29,60 @@ class MachineHarvester extends BaseHarvester
     /**
      * @throws Exception
      */
-    public function harvest($data)
+    public function harvest(BaseTree $tree)
     {
         (new DataBaseConnect())->getConfigOrm();
 
-        $fruits = [];
-        $totalCurrentWeight = 0;
+        echo 'ДО' . '<br>';
+        echo 'ВЕС ФУРЫ ' . $this->currentCapacity . '<br>';
+        echo 'ФРУКТЫ В ФУРЕ ';
+        print_r($this->fruits);
+        echo '<br>';
+        echo 'КОЛ-ВО НА ДЕРЕВЕ ' . $tree->fruitsQuantity . '<br>';
+        echo '<br>' . 'ДЕРЕВО: ' . '<br>';
+        var_export($tree);
+        echo '<br>' . '<br>' . 'СБОРЩИК: ' . '<br>';
+        var_export($this);
 
-        foreach ($data as $tree) {
-            for ($i = 0; $i < $tree->quantity_fruits; $i++) {
-                switch ($tree->type) {
-                    case 'apple':
-                        $fruits_weight = rand(
-                            Garden::APPLE_FRUIT_WEIGHT['min'],
-                            Garden::APPLE_FRUIT_WEIGHT['max']
-                        );
-                        break;
-                    case 'pear':
-                        $fruits_weight = rand(
-                            Garden::PEAR_FRUIT_WEIGHT['min'],
-                            Garden::PEAR_FRUIT_WEIGHT['max']
-                        );
-                        break;
-                    default:
-                        throw new Exception('Тип дерева не поддерживается');
-                }
+        while ($tree->fruitsQuantity) {
+            $this->fruits[$tree->getType()]['weight'] += $tree->fruits[array_key_last($tree->fruits)];
+            $this->currentCapacity += array_pop($tree->fruits);
+            $tree->fruitsQuantity--;
+            $this->fruits[$tree->getType()]['quantity'] += 1;
 
-                if (($totalCurrentWeight + $fruits_weight > self::CAPACITY - $this->getCurrentCapacity())) {
-                    $fruits = $this->unload($fruits,$totalCurrentWeight);
-                }
-
-                $totalCurrentWeight += $fruits_weight;
-                $fruits[$tree->type]['weight'] += $fruits_weight;
-                $fruits[$tree->type]['quantity']++;
-                if ($tree->quantity_fruits == $i + 1) {
-                    $tree->quantity_fruits -= ($i + 1);
-                    $tree->save();
-                }
+            if ($this->capacity < $this->currentCapacity + $tree->fruits[array_key_last($tree->fruits)]) {
+                $this->unload();
             }
-
         }
 
-        $this->unload($fruits, $totalCurrentWeight, true);
+        if ($this->currentCapacity !== 0) {
+            $this->unload();
+        }
+
+        echo '<br>' . '<br>' . 'ПОСЛЕ' . '<br>';
+        echo 'ВЕС ФУРЫ ' . $this->currentCapacity . '<br>';
+        echo 'ФРУКТЫ В ФУРЕ ';
+        print_r($this->fruits);
+        echo '<br>';
+        echo 'КОЛ-ВО НА ДЕРЕВЕ ' . $tree->fruitsQuantity . '<br>';
+        echo '<br>' . 'ДЕРЕВО: ' . '<br>';
+        var_export($tree);
+        echo '<br>' . '<br>' . 'СБОРЩИК: ' . '<br>';
+        var_export($this);
+        die();
     }
 
-
     /**
-     * @param $fruits
-     * @param $totalCurrentWeight
+     * Разгрузка сборщика фруктов
+     *
      * @param bool $isLast
-     * @return array|void
+     * @return void
      */
-    public function unload($fruits, &$totalCurrentWeight, bool $isLast = false)
+    public function unload(bool $isLast = false): void
     {
-        foreach ($fruits as $key => $value) {
+        echo '<br>'. 'ПРЕВЫШЕНА ГРУЗОПОДЪЕМНОСТЬ - РАЗГРУЗКА' . '<br>';
+
+        foreach ($this->fruits as $key => $value) {
             if ($value['quantity'] == 0) {
                 continue;
             }
@@ -100,11 +101,12 @@ class MachineHarvester extends BaseHarvester
                 $container->weight += $value['weight'];
                 $container->save();
             }
+            var_export($this->fruits);
 
-            $fruits[$key]['weight'] -= $value['weight'];
-            $fruits[$key]['quantity'] -= $value['quantity'];
-            $totalCurrentWeight -= $value['weight'];
+            $this->fruits[$key]['weight'] -= $value['weight'];
+            $this->fruits[$key]['quantity'] -= $value['quantity'];
+            $this->currentCapacity -= $value['weight'];
+//            TODO: ЛОГ что и сколько разгрузил
         }
-        return $fruits;
     }
 }

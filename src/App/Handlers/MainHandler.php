@@ -28,20 +28,23 @@ class MainHandler implements RequestHandlerInterface
         // farm
         $treeFactory = new TreeFactory();
         $exampleOneTree = $treeFactory->createOne(new Apple());
-        $exampleSeveralTrees = $treeFactory->createSeveral([
-            'apple' => 2,
-            'pear' => 2,
-        ]);
+//        $exampleSeveralTrees = $treeFactory->createSeveral([
+//            'apple' => 2,
+//            'pear' => 2,
+//        ]);
 
         // harvest
         $harvesterFactory = new HarvesterFactory();
         $harvester = $harvesterFactory->create(new MachineHarvester());
 
+        // сбор
+        $harvester->harvest($exampleOneTree);
+
         return new JsonResponse(
             [
                 'сборщик' => $harvester,
                 'одно дерево' => $exampleOneTree,
-                'несколько деревьев' => $exampleSeveralTrees,
+//                'несколько деревьев' => $exampleSeveralTrees,
             ]
         );
     }
