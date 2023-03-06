@@ -5,6 +5,7 @@ namespace App\src\Harvester;
 use App\Helpers\DataBaseConnect;
 use App\src\Garden;
 use App\src\Models\Fruit;
+use App\src\Models\Harvester;
 use App\src\Models\Tree;
 use App\src\Tree\BaseTree;
 use Exception;
@@ -33,6 +34,9 @@ class MachineHarvester extends BaseHarvester
     public function harvest(Tree $tree)
     {
         (new DataBaseConnect())->getConfigOrm();
+
+        Harvester::whereUuid($this->getUuid())->update(['status' => BaseHarvester::STATUS[0]]);
+        $tree->status = BaseTree::STATUSES[2];
 
         echo '<br>' . 'ДО' . '<br>';
         echo 'ВЕС ФУРЫ ' . $this->currentCapacity . '<br>';
@@ -66,8 +70,10 @@ class MachineHarvester extends BaseHarvester
         foreach ($this->fruits as $key => $value) {
             $tree->fruit_quantity = $value['quantity'];
             $tree->fruits = json_encode($fruits);
+            $tree->status = BaseTree::STATUSES[0];
             $tree->save();
         }
+        Harvester::whereUuid($this->getUuid())->update(['status' => BaseHarvester::STATUS[1]]);
 
 //        echo '<br>' . '<br>' . 'ПОСЛЕ' . '<br>';
 //        echo 'ВЕС ФУРЫ ' . $this->currentCapacity . '<br>';

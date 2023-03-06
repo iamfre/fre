@@ -25,12 +25,11 @@ class MainHandler implements RequestHandlerInterface
     {
         (new DataBaseConnect())->getConfigOrm();
 
-        // farm
         $treeFactory = new TreeFactory();
-//        $exampleOneTree = $treeFactory->createOne(new Apple());
+        $exampleOneTree = $treeFactory->createOne(new Apple());
         $exampleSeveralTrees = $treeFactory->createSeveral([
-            'apple' => 10,
-            'pear' => 15,
+            'apple' => 2,
+            'pear' => 3,
         ]);
 //        echo '<pre>';
 //        var_dump($exampleOneTree);
