@@ -12,13 +12,14 @@ class TreeFactory
         1 => 'pear',
     ];
 
+
     /**
      * Создает один экземпляр дерева
      *
      * @param BaseTree $tree
-     * @return BaseTree
+     * @return Tree
      */
-    public function createOne(BaseTree $tree): BaseTree
+    public function createOne(BaseTree $tree): Tree
     {
         $fruits = [];
 
@@ -31,7 +32,7 @@ class TreeFactory
 
         $tree->setStatus(BaseTree::STATUSES[1]);
 
-        Tree::create(
+        return Tree::create(
             [
                 'type' => $tree->getType(),
                 'fruit_quantity' => $tree->getFruitsQuantity(),
@@ -40,8 +41,6 @@ class TreeFactory
                 'status' => $tree->getStatus(),
             ]
         );
-
-        return $tree;
     }
 
     /**

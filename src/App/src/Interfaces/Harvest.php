@@ -2,9 +2,9 @@
 
 namespace App\src\Interfaces;
 
-use App\src\Tree\BaseTree;
+use App\src\Models\Tree;
 
 interface Harvest
 {
-    public function harvest(BaseTree $tree);
+    public function harvest(Tree $tree);
 }
